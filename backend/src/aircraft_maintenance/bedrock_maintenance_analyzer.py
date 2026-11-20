@@ -237,8 +237,8 @@ Return exactly one JSON object with this schema:
 
         return response_text
 
-    @staticmemethod
-    def _parse_json_resppnse(response_text: str) -> dict[str, Any]:
+    @staticmethod
+    def _parse_json_response(response_text: str) -> dict[str, Any]:
         """Parse and validate the JAON-only model response."""
         try:
             parsed = json.loads(response_text)

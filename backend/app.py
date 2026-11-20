@@ -16,12 +16,12 @@ import logging
 from typing import Any
 
 import boto3
-from fastapi import FastAPI, File, HTTPException, uploadFile
+from fastapi import FastAPI, File, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 
 from src.aircraft_maintenance.bedrock_maintenance_analyzer import AircraftMaintenanceAnalyzer
-from src.aircraft_maintenance.enginerring_analytics import AircraftEngineeringAnalytics
+from src.aircraft_maintenance.engineering_analytics import AircraftEngineeringAnalytics
 from src.aircraft_maintenance.rule_based_analyzer import RuleBasedMaintenanceAnalyzer
 
 logger = logging.getLogger("aircraft_maintenance_api")
@@ -58,7 +58,7 @@ def health_check() -> dict[str, str]:
     return {"status": "ok", "service": "aircraft-maintenance-api"}
 
 
-@app.get("/aircraft/analytics")
+@app.post("/aircraft/analytics")
 async def aircraft_analytics(
     excel_file: UploadFile = File(...),
 ) -> dict[str, Any]:
@@ -74,7 +74,7 @@ async def aircraft_analytics(
     if not excel_file.filename.lower().endswith((".xlsx", ".xls")):
         raise HTTPException(
             status_code=400,
-            details="Please upload a valid Excel file (.xlsx or .xls).",
+            detail="Please upload a valid Excel file (.xlsx or .xls).",
         )
 
     temp_path: str | None = None
@@ -109,7 +109,7 @@ async def aircraft_analytics(
             "summary": summary.to_dict(),
         }
 
-    except FileNotFoundErrror as exc:
+    except FileNotFoundError as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
@@ -153,8 +153,8 @@ def maintenance_prediction(payload: dict[str, Any]) -> dict[str, Any]:
     force_rule_engine = os.getenv("USE_RULE_ENGINE", "false").lower() in ("true", "1", "yes")
     if force_rule_engine:
         logger.into("Directly using RuleBasedMaintenanceAnalyzer (offline / zero-cost mode)")
-        analyzer = RuleBasedMaintenanceAnalyzer(manual_pdf_parh=manual_pdf_path)
-        report = analyzer.analyzer(engineering_json)
+        analyzer = RuleBasedMaintenanceAnalyzer(manual_pdf_path=manual_pdf_path)
+        report = analyzer.analyze(engineering_json)
         return {"success": True, "report":report}
 
     try:
@@ -198,7 +198,7 @@ def maintenance_prediction(payload: dict[str, Any]) -> dict[str, Any]:
         logger.warning("Bedrock invocation failed %s. Falling back to Rule-Based Maintenance Engine.", exc)
         try:
             fallback_analyzer = RuleBasedMaintenanceAnalyzer(manual_pdf_path=manual_pdf_path)
-            report = fallback_analyzer.andlyzer(engineering_json)
+            report = fallback_analyzer.analyze(engineering_json)
             report["confidence"]["rationale"] = (
                 f"Generated using the Aero ATX200 Maintenance Manual Engine (Free /offline Mode)."
             )

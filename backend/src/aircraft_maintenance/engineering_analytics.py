@@ -32,7 +32,7 @@ SENSOR_COLUMNS = [
     "Oil_Temperature",
     "Oil_Pressure",
     "Engine_Vibration",
-    "Compressore_Pressure",
+    "Compressor_Pressure",
     "Fuel_Flow",
     "Hydraulic_Pressure",
     "Engine_RPM",
@@ -83,7 +83,7 @@ class EngineeringSummary:
 
     aircraft_id: str
     latest_flight_cycle: int
-    current_record: dict[str. Any]
+    current_record: dict[str, Any]
     historical_window_size: int
     historical_analysis: list[HistoricalAnalysis] = field(default_factory=list)
 
@@ -109,7 +109,7 @@ class AircraftEngineeringAnalytics:
         self.sheet_name = sheet_name
         self.data: pd.DataFrame | None = None 
 
-    def load_dataser(self) -> pd.DataFrame:
+    def load_dataset(self) -> pd.DataFrame:
         """
         Load, clean, validate, and sort the Excel dataset.
 
@@ -122,10 +122,10 @@ class AircraftEngineeringAnalytics:
         logger.info("Loading aircraft maintenance dataset: %s", self.excel_path)
         data = pd.read_excel(self.excel_path, sheet_name=self.sheet_name)
         data = self._clean_column(data)
-        self._validate_requires_columns(data)
+        self._validate_required_columns(data)
 
         data["Flight_Cycle"] = pd.to_numeric(data["Flight_Cycle"], errors="coerce")
-        data = data.dropna(subset["Aircraft_ID", "Flight_Cycle"])
+        data = data.dropna(subset=["Aircraft_ID", "Flight_Cycle"])
         data["Flight_Cycle"] = data["Flight_Cycle"].astype(int)
 
         self.data = data.sort_values(["Aircraft_ID", "Flight_Cycle"]).reset_index(
@@ -141,7 +141,7 @@ class AircraftEngineeringAnalytics:
     def get_aircraft_history(self, aircraft_id: str) -> pd.DataFrame:
         """Return all historical records for one aircraft."""
         data = self._require_data()
-        history = data[data["Aircraft_ID"].astype(str) == str(aircraft_id).copy()]
+        history = data[data["Aircraft_ID"].astype(str) == str(aircraft_id)]
 
         if history.empty:
             raise ValueError(f"No records found for aircraft: {aircraft_id}")
@@ -194,7 +194,7 @@ class AircraftEngineeringAnalytics:
         analysis: list[HistoricalAnalysis] = []
         numeric_columns = [
             column
-            for column in SENSOR_COLUMNS + ["Risk_Score", "Remaining_UseFul_Life"]
+            for column in SENSOR_COLUMNS + ["Risk_Score", "Remaining_Useful_Life"]
             if column in previous.columns and column in latest.index
         ]
 
@@ -238,7 +238,7 @@ class AircraftEngineeringAnalytics:
         for column in data.columns:
             column_name = str(column).strip()
             column_without_units = re.sub(r"\s*\([^)]*\)", "", column_name).strip()
-            normalized_name = re.sub(
+            normalized_key = re.sub(
                 r"[^a-z0-9]+",
                 "",
                 column_without_units.lower(),

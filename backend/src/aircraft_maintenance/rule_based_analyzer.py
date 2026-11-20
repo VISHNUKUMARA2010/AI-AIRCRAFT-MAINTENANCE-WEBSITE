@@ -18,10 +18,10 @@ logger = logging.getLogger(__name__)
 class RuleBasedMaintenanceAnalyzer:
     """Deterministic maintenance analyzer implementing ATX200 manual limits."""
 
-    def __init__(self, manual_pdf_path: str | None = None)
+    def __init__(self, manual_pdf_path: str | None = None):
         self.manual_pdf_path = manual_pdf_path
 
-    def __init__(self, engineering_analytics: dict[str, Any]) -> dict[str, Any]:
+    def analyze(self, engineering_analytics: dict[str, Any]) -> dict[str, Any]:
         """Generate a structured maintenance report from telemetry signals."""
         current_record = engineering_analytics.get("current_record", {})
         historical_analysis = engineering_analytics.get("historical_analysis", [])
@@ -68,7 +68,7 @@ class RuleBasedMaintenanceAnalyzer:
                 "manual_threshold": "≤ 4.50 mm/s nominal",
                 "severity": "MEDIUM",
                 "manual_reference": "ATX200 Manual Section 7.3 - Rotor Vibration Monitoring",
-                "explanation": f"Vibration of {vib:.2f} mm/s is in the caution band (4.50 - 5.50 mm/s)".,
+                "explanation": f"Vibration of {vib:.2f} mm/s is in the caution band (4.50 - 5.50 mm/s)",
             })
             evidence.append(f"Engine vibration in caution band ({vib:.2f} mm/s)")
 
