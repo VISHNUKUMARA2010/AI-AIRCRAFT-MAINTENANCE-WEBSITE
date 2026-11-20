@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { getMaintenanceRecommendation, healthCheck, uploadAnalyticsFile } from './api/client';
-import PlaneCard from './components/PanelCard';
+import PanelCard from './components/PanelCard';
 
 function App() {
   const [excelFile, setExcelFile] = useState(null);
@@ -160,14 +160,14 @@ function App() {
       { label: 'EGT', value: currentRecord.Exhaust_Gas_Temperature, unit: '℃', max: 850, warm: 700 },
       { label: 'Oil Temp', value: currentRecord.Oil_Temperature, unit: '℃', max: 150, warm: 110 },
       { label: 'Oil Pressure', value: currentRecord.Oil_Pressure, unit: 'psi', max: 65, warm: 45 },
-      { label: 'Engine RPM', value: currentRecord_Engine_RPM, unit: 'RPM', max: 12000, warm: 10500 },
+      { label: 'Engine RPM', value: currentRecord.Engine_RPM, unit: 'RPM', max: 12000, warm: 10500 },
       { label: 'Fuel Flow', value: currentRecord.Fuel_Flow, unit: 'kg/h', max: 3200, warn: 2800 },
       { label: 'Compressor', value: currentRecord.Compressor_Pressure, unit: 'psi', max: 55, warn: 48 },
       { label: 'Hydraulic', value: currentRecord.Hydraulic_Pressure, unit: 'psi', max: 3500, warn: 3200 },
     ];
   }, [currentRecord]);
 
-  const recommendationSummary = recommendation?.report || null;
+  const recommendationSummary = recommendationResult?.report || null;
 
   const workflowSteps = [
     {
@@ -353,7 +353,7 @@ function App() {
                 This stage compares the latest landed-flight telemetry with the historical baseline to reveal the current aircraft condition.
               </p>
 
-              <button type="sumbit" className="primary-btn" disabled={isLoading}>
+              <button type="submit" className="primary-btn" disabled={isLoading}>
                 {isLoading && loadingPhase === 'analytics' ? 'Analyzing telemetry...' : 'Generate Engineering Analytics'}
               </button>
             </form>
@@ -377,8 +377,8 @@ function App() {
               {manualFile ? `Manual loaded: ${manualFile.name}` : 'The PDF is used to enrich the AI recomnendation with manual-specific guidance.'}
             </p>
 
-            <button className="primary-btn wide ai-btn" onClixk={handleRecommendation} disabled={isLiading || !analyticsResult}>
-              {isLiading && loadingPhase === 'ai' ? '✨ AI is analyzing...' : '✨ Generate AI Recommendation'}
+            <button className="primary-btn wide ai-btn" onClick={handleRecommendation} disabled={isLoading || !analyticsResult}>
+              {isLoading && loadingPhase === 'ai' ? '✨ AI is analyzing...' : '✨ Generate AI Recommendation'}
             </button>
           </PanelCard>
         </aside>
@@ -478,15 +478,15 @@ function App() {
             </PanelCard>
 
             {/* ----- AI Maintenance Recommendation ----- */}
-            <PlaneCard
+            <PanelCard
               title="AI Maintenance Recommendation"
               subtitle="Intelligent guidance generated from analytics & maintenance manual"
               accent="ai"
               badge={
-                <Span className="panel-badge ai-badge">
+                <span className="panel-badge ai-badge">
                   <span className="ai-sparkle">✨</span>
                   AI Powered
-                </Span>
+                </span>
               }
             >
               {isLoading && loadingPhase === 'ai' ? (
@@ -547,7 +547,7 @@ function App() {
                     <div className="decision-statement">
                       {recommendationSummary.final_flight_decision.ui_statement}
                     </div>
-                    {recommendationSumarry.final_flight_decision.decision_rationale && (
+                    {recommendationSummary.final_flight_decision.decision_rationale && (
                       <div className="decision-rationale">
                         💡 {recommendationSummary.final_flight_decision.decision_rationale}
                       </div>
@@ -719,7 +719,7 @@ function App() {
                   Generate the AI recommendation to view intelligent maintenance decision board.
                 </p>
               )}
-            </PlaneCard>
+            </PanelCard>
           </div>
         </main>
       </div>
