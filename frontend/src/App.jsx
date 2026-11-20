@@ -1,9 +1,9 @@
-import { useEffect, useMemo, usestate } from "react";
-import { getMaintenanceRecommedation, healthCheck, UploadAnalyticsFile } from './api/client';
+import { useEffect, useMemo, useState } from "react";
+import { getMaintenanceRecommendation, healthCheck, uploadAnalyticsFile } from './api/client';
 import PlaneCard from './components/PanelCard';
 
 function App() {
-  const [excelFile, setExcelFile] = usestate(null);
+  const [excelFile, setExcelFile] = useState(null);
   const [manualFile, setManualFile] = useState(null);
   const [status, setStatus] = useState('Checking backend connection...');
   const [isLoading, setIsLoading] = useState(false);
@@ -61,7 +61,7 @@ function App() {
     setError('');
 
     try {
-      const response = await getMaintenanceRecommedation(analyticsResult);
+      const response = await getMaintenanceRecommendation(analyticsResult);
       setRecommendation(response);
       setStatus('AI maintenance recommendation generated');
     } catch (err) {
