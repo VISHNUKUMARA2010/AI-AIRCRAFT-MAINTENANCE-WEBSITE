@@ -5,6 +5,9 @@ AI-AIRCRAFT-MAINTENANCE is an advanced, aerospace-grade post-landing telemetry a
 It automates the intake of aircraft recorder data (ACARS / FDR / QAR) and cross-references sensor signals against
 official Aircraft Maintenance Manual (AMM).
 
+# LIVE DEMO URL
+https://ai-aircraft-maintenance-website.onrender.com
+
 # THE CORE PROBLEM IT SOLVES.
 
 Every Modern aircraft generate millions of telemetry data points across every flight cycles.
@@ -91,3 +94,10 @@ npm install
 npm run dev
 ```
 Frontend runs at: http://localhost:3000
+
+## DEMO REPORT PDF AND EXCEL
+
+To get Demo reports available in repo you can get it.
+* https://github.com/VISHNUKUMARA2010/AI-AIRCRAFT-MAINTENANCE-WEBSITE/blob/main/AeroTech_ATX200_Maintenance_Manual.pdf
+* https://github.com/VISHNUKUMARA2010/AI-AIRCRAFT-MAINTENANCE-WEBSITE/blob/main/Cessna_172S_N5142B_Maintenance_Report.pdf
+* 
