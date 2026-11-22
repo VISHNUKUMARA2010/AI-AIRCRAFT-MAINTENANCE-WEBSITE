@@ -100,4 +100,5 @@ Frontend runs at: http://localhost:3000
 To get Demo reports available in repo you can get it.
 * https://github.com/VISHNUKUMARA2010/AI-AIRCRAFT-MAINTENANCE-WEBSITE/blob/main/AeroTech_ATX200_Maintenance_Manual.pdf
 * https://github.com/VISHNUKUMARA2010/AI-AIRCRAFT-MAINTENANCE-WEBSITE/blob/main/Cessna_172S_N5142B_Maintenance_Report.pdf
-* 
+* https://github.com/VISHNUKUMARA2010/AI-AIRCRAFT-MAINTENANCE-WEBSITE/blob/main/Cessna_172S_N5142B_Maintenance_Report.xlsx
+* https://github.com/VISHNUKUMARA2010/AI-AIRCRAFT-MAINTENANCE-WEBSITE/blob/main/aircraft_maintenance_intelligence_dataset.xlsx
